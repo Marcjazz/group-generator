@@ -1,8 +1,8 @@
 use std::fmt::Display;
 
 use crate::{
-    data_collection::DataCollection,
     enums::difficulty::Difficulty,
+    helper::CollectDataHelper,
     traits::{collect::Collect, gen_data_id::GenDataId},
 };
 use cli_table::{format::Justify, Table};
@@ -57,9 +57,9 @@ impl Collect for Topic {
     fn collect() -> Self {
         let mut topic = Self::new();
 
-        topic.title = DataCollection::input("Enter topic title:");
+        topic.title = CollectDataHelper::read_input("Enter topic title:");
 
-        let difficulty = DataCollection::input("Enter topic difficulty:");
+        let difficulty = CollectDataHelper::read_input("Enter topic difficulty:");
         topic.difficulty = Difficulty::from(difficulty.as_str());
 
         topic

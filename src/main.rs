@@ -5,7 +5,7 @@ fn main() {
     app.run();
 }
 
-mod data_collection;
+mod helper;
 mod enums;
 mod models;
 mod application;

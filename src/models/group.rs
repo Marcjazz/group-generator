@@ -1,7 +1,7 @@
 use cli_table::{format::Justify, Table};
 
 use crate::{
-    application::Helper,
+    helper::{DisplayHelper, Helper},
     models::{student::Student, topic::Topic},
     traits::gen_data_id::GenDataId,
 };
@@ -14,7 +14,7 @@ pub struct Group {
     #[table(title = "Label")]
     label: String,
 
-    #[table(skip)]
+    #[table(title = "Topic")]
     topic: Topic,
 
     #[table(skip)]
@@ -22,15 +22,21 @@ pub struct Group {
 
     #[table(title = "Generated At")]
     generated_at: u64,
+
+    #[table(title = "Students")]
+    students_display: String, // Derived field
 }
 
 impl Group {
     pub fn from(label: String, topic: Topic, students: Vec<Student>) -> Self {
+        let students_display = DisplayHelper::stringify(&students, "\n");
+
         Self {
             id: 0,
             label,
             topic,
             students,
+            students_display,
             generated_at: Helper::now_in_secs(),
         }
     }

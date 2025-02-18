@@ -1,12 +1,17 @@
-use cli_table::{format::Justify, Color, Table};
-use crate::{data_collection::DataCollection, traits::{collect::Collect, gen_data_id::GenDataId}};
+use std::fmt::Display;
+
+use crate::{
+    helper::CollectDataHelper,
+    traits::{collect::Collect, gen_data_id::GenDataId},
+};
+use cli_table::{format::Justify, Table};
 
 #[derive(Debug, Clone, Table)]
 pub struct Student {
     #[table(title = "ID", justify = "Justify::Right")]
     id: u32,
 
-    #[table(title = "Name", color = "Color::Green")]
+    #[table(title = "Name")]
     name: String,
 }
 
@@ -33,7 +38,7 @@ impl Student {
 
 impl Collect for Student {
     fn collect() -> Self {
-        let name = DataCollection::input("Enter student name:");
+        let name = CollectDataHelper::read_input("Enter student name:");
 
         Self::from(name)
     }
@@ -46,5 +51,11 @@ impl GenDataId<u32> for Student {
 
     fn get_id(&self) -> u32 {
         self.id
+    }
+}
+
+impl Display for Student {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Student(ID={}, Name={})", self.id, self.name)
     }
 }

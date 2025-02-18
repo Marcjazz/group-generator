@@ -1,14 +1,11 @@
+use rand::seq::SliceRandom;
 use std::{collections::HashSet, fmt::Debug};
 
-use cli_table::print_stdout;
-use cli_table::WithTitle;
-use rand::seq::SliceRandom;
-
 use crate::{
-    data_collection::DataCollection,
     enums::labelling::Labelling,
+    helper::{CollectDataHelper, DisplayHelper, LabellingHelper},
     models::{group::Group, student::Student, topic::Topic},
-    traits::{collect::Collect, gen_data_id::GenDataId},
+    traits::gen_data_id::GenDataId,
 };
 
 #[derive(Debug)]
@@ -39,44 +36,35 @@ impl Application {
         println!("Enter new topics.");
 
         let AppState {
-            topics,
-            students,
-            ..
+            topics, students, ..
         } = &mut self.state;
 
         loop {
-            Self::collect_gen_data(topics);
+            CollectDataHelper::collect_gen_data(topics);
 
-            if Self::should_break() {
+            if CollectDataHelper::should_break() {
                 break;
             }
         }
-
-        Helper::display(topics.iter());
 
         println!("Enter student names.");
 
         loop {
-            Self::collect_gen_data(students);
+            CollectDataHelper::collect_gen_data(students);
 
-            if Self::should_break() {
+            if CollectDataHelper::should_break() {
                 break;
             }
         }
 
-        Helper::display(students.iter());
+        DisplayHelper::display(topics.iter());
+        DisplayHelper::display(students.iter());
+
 
         // Generate groups
         self.gen_groups();
 
-        let groups = self.state.groups.clone();
-        for group in groups {
-            let topic = group.get_topic();
-            let students = group.get_students();
-            Helper::display(vec![group].iter());
-            println!("{:?}", topic);
-            Helper::display(students.iter());
-        }
+        DisplayHelper::display(self.state.groups.iter());
     }
 
     fn gen_groups(&mut self) {
@@ -95,7 +83,7 @@ impl Application {
 
         for topic in topics {
             let current_group_id = new_groups.len() + 1;
-            let label = Self::label_gen(labelling.to_owned(), current_group_id);
+            let label = LabellingHelper::label_gen(labelling.to_owned(), current_group_id);
 
             let mut students: Vec<Student> = self
                 .state
@@ -126,47 +114,5 @@ impl Application {
         }
 
         self.state.groups.append(&mut new_groups.clone());
-    }
-
-    fn collect_gen_data<T: GenDataId<u32> + Debug + Collect>(elements: &mut Vec<T>) {
-        let mut new_element = T::collect();
-        new_element.set_id((elements.len() + 1) as u32);
-        elements.push(new_element);
-    }
-
-    fn should_break() -> bool {
-        let proceed = DataCollection::input("Do you want to continue?(yes/no)[yes]:");
-        proceed.to_lowercase().eq("no")
-    }
-
-    fn label_gen(labelling: Labelling, groups_len: usize) -> String {
-        match labelling {
-            Labelling::Numeric => Self::num_label_gen(groups_len),
-            Labelling::Alphabetic => todo!(),
-            Labelling::AlphaNumeric => todo!(),
-        }
-    }
-
-    fn num_label_gen(groups_len: usize) -> String {
-        (groups_len + 1).to_string()
-    }
-}
-
-pub struct Helper;
-impl Helper {
-    pub fn now_in_secs() -> u64 {
-        use std::time::{SystemTime, UNIX_EPOCH};
-
-        let now = SystemTime::now();
-        match now.duration_since(UNIX_EPOCH) {
-            Ok(value) => value.as_secs(),
-            Err(_) => {
-                panic!("Time went backward!")
-            }
-        }
-    }
-
-    pub fn display<T: WithTitle>(table: T) {
-        let _ = print_stdout(table.with_title());
     }
 }
