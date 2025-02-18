@@ -1,6 +1,6 @@
-use crate::{data_collection::DataCollection, traits::collect::Collect};
+use crate::{data_collection::DataCollection, traits::{collect::Collect, gen_data_id::GenDataId}};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Student {
     id: u32,
     name: String,
@@ -18,16 +18,8 @@ impl Student {
         Self { id: 0, name }
     }
 
-    pub fn set_id(&mut self, id: u32) {
-        self.id = id;
-    }
-
     pub fn set_name(&mut self, name: String) {
         self.name = name
-    }
-
-    pub fn get_id(&self) -> u32 {
-        self.id
     }
 
     pub fn get_name(&self) -> String {
@@ -37,9 +29,18 @@ impl Student {
 
 impl Collect for Student {
     fn collect() -> Self {
-        let prompt = Some("Enter student name:".to_string());
-        let name = DataCollection::input(prompt);
+        let name = DataCollection::input("Enter student name:");
 
         Self::from(name)
+    }
+}
+
+impl GenDataId<u32> for Student {
+    fn set_id(&mut self, id: u32) {
+        self.id = id;
+    }
+
+    fn get_id(&self) -> u32 {
+        self.id
     }
 }

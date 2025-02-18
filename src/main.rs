@@ -1,7 +1,8 @@
+use application::Application;
+
 fn main() {
-    println!("Hello, world!");
-    let a: i32 = 12;
-    let b = a as i16;
+    let mut app = Application::new();
+    app.run();
 }
 
 mod data_collection;

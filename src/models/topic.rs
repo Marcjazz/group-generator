@@ -1,7 +1,5 @@
 use crate::{
-    data_collection::DataCollection,
-    enums::difficulty::{self, Difficulty},
-    traits::collect::Collect,
+    data_collection::DataCollection, enums::difficulty::Difficulty, traits::{collect::Collect, gen_data_id::GenDataId},
 };
 
 #[derive(Debug, Clone)]
@@ -49,13 +47,21 @@ impl Collect for Topic {
     fn collect() -> Self {
         let mut topic = Self::new();
 
-        let prompt = Some("Enter topic title:".to_string());
-        topic.title = DataCollection::input(prompt);
+        topic.title = DataCollection::input("Enter topic title:");
 
-        let prompt = Some("Enter topic difficulty:".to_string());
-        let difficulty = DataCollection::input(prompt);
+        let difficulty = DataCollection::input("Enter topic difficulty:");
         topic.difficulty = Difficulty::from(difficulty.as_str());
 
         topic
+    }
+}
+
+impl GenDataId<u32> for Topic {
+    fn set_id(&mut self, id: u32) {
+        self.id = id;
+    }
+
+    fn get_id(&self) -> u32 {
+        self.id
     }
 }
