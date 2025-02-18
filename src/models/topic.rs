@@ -1,11 +1,21 @@
-use crate::{
-    data_collection::DataCollection, enums::difficulty::Difficulty, traits::{collect::Collect, gen_data_id::GenDataId},
-};
+use std::fmt::Display;
 
-#[derive(Debug, Clone)]
+use crate::{
+    data_collection::DataCollection,
+    enums::difficulty::Difficulty,
+    traits::{collect::Collect, gen_data_id::GenDataId},
+};
+use cli_table::{format::Justify, Table};
+
+#[derive(Debug, Clone, Table)]
 pub struct Topic {
+    #[table(title = "ID", justify = "Justify::Right")]
     id: u32,
+
+    #[table(title = "Title")]
     title: String,
+
+    #[table(title = "Difficulty")]
     difficulty: Difficulty,
 }
 
@@ -63,5 +73,15 @@ impl GenDataId<u32> for Topic {
 
     fn get_id(&self) -> u32 {
         self.id
+    }
+}
+
+impl Display for Topic {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(
+            f,
+            "Topic(ID={}, Title={}, Difficulty={:?})",
+            self.id, self.title, self.difficulty
+        )
     }
 }
