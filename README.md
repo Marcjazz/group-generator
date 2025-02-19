@@ -1,4 +1,3 @@
-
 # Rust Program for Group Exercise
 
 This Rust program is aimed to automatically assign students to groups, each associated with a topic, while ensuring each student falls under a group which has a topic. 
@@ -16,7 +15,6 @@ The groups and their details are saved after the run of the program, which are o
   - Topics form groups
   - Topics are assigned to a difficulty level of either easy, medium or hard.
     
-
 - **Group setup**:
 
   - Each group must have a label.
@@ -36,7 +34,6 @@ The groups and their details are saved after the run of the program, which are o
 2. **Topic**:
     - Each group will be assigned a unique topic. The number of topics should not exceed the number of students, ensuring that every group has a dedicated topic.
 
-
 ## Objectives
 
 - **Group File Creation**: every group be in the  unique file with its label and associated students.
@@ -49,8 +46,7 @@ The groups and their details are saved after the run of the program, which are o
 ### Additional features
  **Colors**
    - Added colors for more readibility and styling 
-  
-  
+    
 ## Usage
 ### Option I
 - Clone this repository and run using cargo 
@@ -73,7 +69,9 @@ cargo run
    docker build -t group .
 ```
 - Run the image with a docker container with a volume to the container this allows the program to save it's data from previous run on the host machine and can access the saved state data after every run
-
+  
 ```bash
 docker run -it -v $(pwd)/data:/usr/src/group-generator/data group
 ```
+
+## THANK YOU FOR USING THE PROGRAM GIVE IT A STAR ⭐️
