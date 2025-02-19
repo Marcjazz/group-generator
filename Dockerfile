@@ -1,24 +1,35 @@
-FROM rust:latest as builder
+FROM rust:alpine AS build-env
 
 WORKDIR /usr/src/group-generator
 
 COPY Cargo.toml Cargo.lock ./
 
-COPY . .
+# Copy the source code
+COPY src ./src
+
+# Install necessary build dependencies
+RUN apk add --no-cache musl-dev upx
 
 RUN cargo build --release
 
-FROM ubuntu:22.04
+# Compress the binary using upx
+RUN upx --best target/release/group-generator
+
+# Create the directory for saving the apps state
+RUN mkdir -p /usr/src/group-generator/data
+
+# Use a minimal base image for the final image
+FROM scratch
 
 WORKDIR /usr/src/group-generator
 
-# Sets a HOME environment variable to a directory inside the the container
+# Set the HOME environment variable to a directory which saves the apps state in the container
 ENV HOME=/usr/src/group-generator/data
 
-# Creates the directory for saving the app  state after the program have been run and set permissions
-RUN mkdir -p $HOME && chown -R root:root $HOME
+# Copy the directory for saving state
+COPY --from=build-env /usr/src/group-generator/data /usr/src/group-generator/data
 
-COPY --from=builder /usr/src/group-generator/target/release/group-generator .
+# Copy the statically linked and compressed binary from the builder stage
+COPY --from=build-env /usr/src/group-generator/target/release/group-generator .
 
-# Runs the executable on container startup
 CMD ["./group-generator"]
