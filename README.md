@@ -72,8 +72,8 @@ cargo run
 ```bash
    docker build -t group .
 ```
-- Run the image in a docker image
+- Run the image with a docker container with a volume to the container this allows the program to save it's data from previous run on the host machine and can access the saved state data after every run
 
 ```bash
-docker run -it group
+docker run -it -v $(pwd)/data:/usr/src/group-generator/data group
 ```
