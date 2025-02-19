@@ -1,4 +1,5 @@
 use cli_table::{format::Justify, Table};
+use serde::{Deserialize, Serialize};
 
 use crate::{
     helper::{DisplayHelper, Helper},
@@ -6,7 +7,7 @@ use crate::{
     traits::gen_data_id::GenDataId,
 };
 
-#[derive(Debug, Clone, Table)]
+#[derive(Debug, Clone, Table, Serialize, Deserialize)]
 pub struct Group {
     #[table(title = "ID", justify = "Justify::Right")]
     id: u32,

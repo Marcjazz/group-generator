@@ -6,8 +6,9 @@ use crate::{
     traits::{collect::Collect, gen_data_id::GenDataId},
 };
 use cli_table::{format::Justify, Table};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Table)]
+#[derive(Debug, Clone, Table, Serialize, Deserialize)]
 pub struct Topic {
     #[table(title = "ID", justify = "Justify::Right")]
     id: u32,

@@ -1,14 +1,17 @@
+use cli_table::{Cell, Table};
 use rand::seq::SliceRandom;
-use std::{collections::HashSet, fmt::Debug};
+use serde::{Deserialize, Serialize};
+use std::{collections::HashSet, fmt::Debug, io::Error};
 
 use crate::{
     enums::labelling::Labelling,
-    helper::{CollectDataHelper, DisplayHelper, LabellingHelper},
+    file_manager::FileManager,
+    helper::{CollectDataHelper, DisplayHelper, Helper, LabellingHelper},
     models::{group::Group, student::Student, topic::Topic},
     traits::gen_data_id::GenDataId,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 struct AppState {
     labelling: Labelling,
     topics: Vec<Topic>,
@@ -16,12 +19,14 @@ struct AppState {
     groups: Vec<Group>,
 }
 
+#[derive(Debug)]
 pub struct Application {
     state: AppState,
+    file_manager: FileManager,
 }
 
 impl Application {
-    pub fn new() -> Self {
+    pub fn new(app_name: &str) -> Self {
         Self {
             state: AppState {
                 labelling: Labelling::Numeric,
@@ -29,10 +34,11 @@ impl Application {
                 students: Vec::new(),
                 topics: Vec::new(),
             },
+            file_manager: FileManager::new(app_name),
         }
     }
 
-    pub fn run(&mut self) {
+    pub fn launch(&mut self) {
         println!("Enter new topics.");
 
         let AppState {
@@ -60,11 +66,59 @@ impl Application {
         DisplayHelper::display(topics.iter());
         DisplayHelper::display(students.iter());
 
-
         // Generate groups
         self.gen_groups();
 
         DisplayHelper::display(self.state.groups.iter());
+
+        let should_save =
+            CollectDataHelper::read_input("Do wich to save application state?(yes/no)[no]:")
+                .to_lowercase()
+                .eq("yes");
+
+        // Save application state
+        if should_save {
+            self.save_app_state();
+        }
+    }
+
+    /// Persist application data
+    pub fn save_app_state(&self) {
+        let filename = format!("grp_{}.bin", Helper::now_in_secs());
+        match self.file_manager.save_to_file(&self.state, filename.as_str()) {
+            Ok(_) => {}
+            Err(e) => eprintln!("Could not save application state: {e}"),
+        }
+    }
+
+    /// Starts application by loading data from file system
+    pub fn start(&mut self) -> std::io::Result<()> {
+        let app_state_files = self.file_manager.get_saved_files()?;
+        let table = app_state_files
+            .iter()
+            .enumerate()
+            .map(|(i, file)| vec![i.cell(), file.cell()])
+            .table()
+            .title(vec!["ID", "Saving Name"]);
+        println!("{}", table.display().unwrap());
+
+        let id: usize = CollectDataHelper::read_input("Enter Saving ID:")
+            .parse()
+            .expect("Invalid input");
+
+        if id >= app_state_files.len() {
+            return Err(Error::new(
+                std::io::ErrorKind::InvalidInput,
+                "Index out of bound.",
+            ));
+        }
+
+        let filename = &app_state_files[id];
+        self.state = self.file_manager.load_from_file(filename.as_str())?;
+
+        DisplayHelper::display(self.state.groups.iter());
+
+        Ok(())
     }
 
     fn gen_groups(&mut self) {
