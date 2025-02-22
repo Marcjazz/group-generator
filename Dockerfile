@@ -1,4 +1,4 @@
-Smallest rust image FROM rust:alpine AS build-env
+FROM rust:alpine AS build-env
 
 WORKDIR /app
 
