@@ -14,8 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: verify commit
-      run: git verify-commit
+    - name: Check for unverified commits
+      uses: nadock/verified_commits_check@v1
       
     - name: Build
       run: cargo build --verbose
