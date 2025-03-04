@@ -30,11 +30,15 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: downcase REPO
+      run: |
+          echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+          
     - name: Build Project
       uses: docker/build-push-action@v4
       with:
         context: .
         push: true
         tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.run_number }}
+            ghcr.io/${{ env.repo }}:latest
+            ghcr.io/${{ env.repo }}:${{ github.run_number }}
