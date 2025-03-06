@@ -85,7 +85,10 @@ impl Application {
     /// Persist application data
     pub fn save_app_state(&self) {
         let filename = format!("grp_{}.bin", Helper::now_in_secs());
-        match self.file_manager.save_to_file(&self.state, filename.as_str()) {
+        match self
+            .file_manager
+            .save_to_file(&self.state, filename.as_str())
+        {
             Ok(_) => {}
             Err(e) => eprintln!("Could not save application state: {e}"),
         }
@@ -132,13 +135,20 @@ impl Application {
         } = &self.state;
 
         let mut new_groups = Vec::new();
+        let remainder = students.len() % topics.len();
         let nbr_of_members = students.len() / topics.len();
         let mut assigned_student_ids = HashSet::<u32>::new();
+        let mut index: usize = 0;
 
         for topic in topics {
             let current_group_id = new_groups.len() + 1;
             let label = LabellingHelper::label_gen(labelling.to_owned(), current_group_id);
-
+            let nbr_of_members = if index < remainder 
+            {
+                nbr_of_members + 1
+            } else {
+                nbr_of_members
+            };
             let mut students: Vec<Student> = self
                 .state
                 .students
@@ -165,6 +175,7 @@ impl Application {
             let mut new_group = Group::from(label, topic.to_owned(), grp_members);
             new_group.set_id(current_group_id as u32);
             new_groups.push(new_group);
+            index += 1;
         }
 
         self.state.groups.append(&mut new_groups.clone());
