@@ -22,9 +22,9 @@ impl From<&str> for Difficulty {
 impl Into<&str> for Difficulty {
     fn into(self) -> &'static str {
         match self {
-            Self::Hard => "hard",
-            Self::Medium => "medium",
-            Self::Easy => "easy",
+            Self::Hard => "Hard",
+            Self::Medium => "Medium",
+            Self::Easy => "Easy",
         }
     }
 }

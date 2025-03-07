@@ -29,7 +29,7 @@ impl Application {
     pub fn new(app_name: &str) -> Self {
         Self {
             state: AppState {
-                labelling: Labelling::Numeric,
+                labelling: Labelling::Alphanumeric,
                 groups: Vec::new(),
                 students: Vec::new(),
                 topics: Vec::new(),
