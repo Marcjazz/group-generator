@@ -5,6 +5,7 @@ use crate::{
     traits::{collect::Collect, gen_data_id::GenDataId},
 };
 use cli_table::{format::Justify, Table};
+use colored::Colorize;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Table, Serialize, Deserialize)]
@@ -57,6 +58,6 @@ impl GenDataId<u32> for Student {
 
 impl Display for Student {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Student(ID={}, Name={})", self.id, self.name)
+        write!(f, "Student(ID={}, Name={})", self.id, self.name.bold().green())
     }
 }

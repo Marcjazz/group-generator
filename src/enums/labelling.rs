@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 pub enum Labelling {
     Numeric,
     Alphabetic,
-    AlphaNumeric
+    Alphanumeric
 }
 
 
@@ -12,7 +12,7 @@ impl From<&str> for Labelling {
     fn from(value: &str) -> Self {
         match value.to_lowercase().as_str() {
             "alphabetic" => Self::Alphabetic,
-            "alphanumeric" => Self::AlphaNumeric,
+            "alphanumeric" => Self::Alphanumeric,
             _ => Self::Numeric,
         }
     }
@@ -21,7 +21,7 @@ impl From<&str> for Labelling {
 impl Into<&str> for Labelling {
     fn into(self) -> &'static str {
         match self {
-            Self::AlphaNumeric => "alphanumeric",
+            Self::Alphanumeric => "alphanumeric",
             Self::Alphabetic => "alphabetic",
             Self::Numeric => "numeric",
         }

@@ -1,0 +1,71 @@
+10
+Option Niche Optimization Basics
+easy
+Examine how Rust leverages niche optimization to represent Option<T> efficiently.
+yes
+Memory Layout of Option
+easy
+Analyze the underlying memory representation of Option<T> and its performance benefits.
+yes
+Tail Expressions in Code Blocks
+easy
+Discuss how tail expressions work as implicit returns in Rust functions.
+yes
+Desugaring Implicit Returns
+easy
+Explore how the compiler transforms code blocks with implicit returns into lower-level operations.
+yes
+Match Expressions and Decision Trees
+easy
+Break down how match constructs are compiled into decision trees for efficient pattern matching.
+no
+Usher Pharell Blondi Tchankoumi
+yes
+Celine-Coralie Eni Bina
+yes
+Thondipiong Abakoumou Ange Fresnelle
+yes
+Emmanuel Kame Mbiti
+yes
+Joël Nathan Wanko Tchagang
+yes
+Jagoum Tchioho Richemond
+yes
+Mpamé Franck-Sorel
+yes
+Ngam Vitalis
+yes
+Christian Ryan Leghadjeu
+yes
+Tissong Guy Ghislain
+yes
+Cho Ju-Nine Ngu
+yes
+Sob Onel Ngwa
+yes
+Atebe Marc-Junior Etienyuei
+yes
+Tegha Romeo Dze
+yes
+Possi Benie Joy
+yes
+Nyengka Prosper Prosper Burinyuy
+yes
+Nafisatou 
+yes
+KONGNYU Dada
+yes
+Awungia Njijong
+yes
+Micheal Ndoh
+yes
+Eva Manuska Tchokonte Siewe
+yes
+Lele Maxwell
+yes
+Kunga Derick Abongho
+yes
+Desmond Tardzenyuy
+yes
+Nkwenti Severian Ndongtsop
+no

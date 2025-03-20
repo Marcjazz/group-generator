@@ -4,6 +4,7 @@ use std::{
 };
 
 use cli_table::{print_stdout, Table, WithTitle};
+use rand::{distr::Alphanumeric, rng, Rng};
 
 use crate::{
     enums::labelling::Labelling,
@@ -30,13 +31,22 @@ impl LabellingHelper {
     pub fn label_gen(labelling: Labelling, groups_len: usize) -> String {
         match labelling {
             Labelling::Numeric => Self::num_label_gen(groups_len),
+            Labelling::Alphanumeric =>  Self::alphanumeric_gen(groups_len),
             Labelling::Alphabetic => todo!(),
-            Labelling::AlphaNumeric => todo!(),
         }
     }
 
     pub fn num_label_gen(groups_len: usize) -> String {
         (groups_len + 1).to_string()
+    }
+
+    pub fn alphanumeric_gen(groups_len: usize) -> String {
+        let length = (groups_len as f64).log2().ceil() as usize + 4;
+        rng()
+            .sample_iter(&Alphanumeric)
+            .take(length)
+            .flat_map(|i| char::from(i).to_uppercase())
+            .collect()
     }
 }
 

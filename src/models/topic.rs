@@ -1,12 +1,12 @@
-use std::fmt::Display;
-
 use crate::{
     enums::difficulty::Difficulty,
     helper::CollectDataHelper,
     traits::{collect::Collect, gen_data_id::GenDataId},
 };
 use cli_table::{format::Justify, Table};
+use colored::*;
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 
 #[derive(Debug, Clone, Table, Serialize, Deserialize)]
 pub struct Topic {
@@ -18,14 +18,18 @@ pub struct Topic {
 
     #[table(title = "Difficulty")]
     difficulty: Difficulty,
+
+    #[table(title = "description")]
+    description: String,
 }
 
 impl Topic {
     pub fn new() -> Self {
         Self {
             id: 0,
-            title: String::from(""),
+            title: String::new(),
             difficulty: Difficulty::Easy,
+            description: String::new(),
         }
     }
 
@@ -63,6 +67,8 @@ impl Collect for Topic {
         let difficulty = CollectDataHelper::read_input("Enter topic difficulty:");
         topic.difficulty = Difficulty::from(difficulty.as_str());
 
+        topic.description = CollectDataHelper::read_input("Enter topic description:");
+
         topic
     }
 }
@@ -81,8 +87,11 @@ impl Display for Topic {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(
             f,
-            "Topic(ID={}, Title={}, Difficulty={:?})",
-            self.id, self.title, self.difficulty
+            "Topic(ID={}, Title={}, Difficulty={})\n\n{}",
+            self.id,
+            self.title.bold().green(),
+            self.difficulty.to_string().bold().green(),
+            format!("Description: {}", self.description).italic()
         )
     }
 }
